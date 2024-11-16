@@ -1,6 +1,6 @@
 ---
 title: "Lab 8: Searching for Efficiency"
-author: "Your name here!"
+author: "Kyle Taschek!"
 format: html
 editor: source
 embed-resources: true
@@ -44,6 +44,15 @@ each variable, with the datatype of that variable immediately below it's name.
 ```{r}
 #| label: map-data-types-of-surveys
 
+# Reference: Used reframe because given a warning when using summarise:
+
+# 'Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in dplyr 1.1.0.
+# Please use `reframe()` instead.
+# When switching from `summarise()` to `reframe()`, remember that `reframe()` always returns an ungrouped data frame and adjust accordingly.'
+
+surveys |>
+  summarize(across(everything(), ~ map_chr(.x, ~ class(.x)[1]))) |>
+  slice_head()
 
 ```
 
@@ -61,6 +70,17 @@ list output back into a data frame.
 
 ```{r}
 #| label: map-to-mutate-columns
+#| message: False
+
+evals <- evals |>
+  bind_cols(
+    map_at(
+      evals,
+      c(
+        "teacher_id", "weekday", "academic_degree", "seniority", "gender"),
+      as.factor
+      )
+  )
 
 
 ```
